@@ -1,4 +1,5 @@
 ! test_triangle.f90
+! Test of lightcurve computation for a general triangular mesh.
 ! Miroslav Broz (miroslav.broz@email.cz), Oct 28th 2022
 
 program test_triangle
@@ -40,7 +41,7 @@ double precision :: d1, d2, omega, T
 double precision :: lambda_eff, Delta_eff
 double precision :: Phi_nu_cal, Phi_lambda_cal, Phi_V_cal
 double precision :: B_lambda, J_lambda, P_lambda, Phi_lambda, P_V, Phi_V, V0
-double precision :: tmp, tmp2
+double precision :: tot, tmp
 double precision :: t1, t2
 character(len=80) :: str
 
@@ -123,26 +124,52 @@ P_lambda = 4.d0*pi * J_lambda           ! over omega, full-space
 P_lambda = 4.d0*pi*R_S**2 * Phi_lambda  ! over S
 P_V = Delta_eff*P_lambda                ! over lambda
 
+write(*,*) '# at stellar surface:'
+write(*,*) 'lambda_eff = ', lambda_eff, ' m'
+write(*,*) 'Delta_eff = ', Delta_eff, ' m'
+write(*,*) 'B_lambda = ', B_lambda, ' W m^-2 sr^-1 m^-1'
+write(*,*) 'Phi_lambda = ', Phi_lambda, ' W m^-2 m^-1'
+write(*,*) 'J_lambda = ', J_lambda, ' W sr^-1 m^-1'
+write(*,*) 'P_lambda = ', P_lambda, ' W m^-1'
+write(*,*) 'P_V = ', P_V, ' W'
+
 ! asteroid surface
 d1 = 1.d0*au
 A_w = 1.d0
 
 Phi_lambda = P_lambda/(4.d0*pi*d1**2)
-Phi_V = Phi_lambda*Delta_eff  ! W m^-2
+Phi_V = Phi_lambda*Delta_eff
 
 f_L = A_w/(4.d0*pi)  ! sr^-1
 A_hL = pi*f_L
 A_gL = 2.d0/3.d0*pi*f_L
 A_BL = pi*f_L
 
+write(*,*) '# at asteroid surface:'
+write(*,*) 'd1 = ', d1/au, ' au'
+write(*,*) 'Phi_lambda = ', Phi_lambda, ' W m^-2 m^-1'
+write(*,*) 'Phi_V = ', Phi_V, ' W m^-2'
+write(*,*) 'f_L = ', f_L, ' sr^-1'
+write(*,*) 'A_w = ', A_w
+write(*,*) 'A_hL = ', A_hL
+write(*,*) 'A_gL = ', A_gL
+write(*,*) 'A_BL = ', A_BL
+
 ! observer location
 d2 = 1.d0*au
 omega = 1.d0/(d2**2)  ! sr
+
+write(*,*) 'd2 = ', d2/au, ' au'
+write(*,*) 'omega = ', omega, ' sr'
 
 ! calibration
 Phi_nu_cal = 3.636d-23  ! W m^-2 Hz^-1; Bessel (2000)
 Phi_lambda_cal = Phi_nu_cal*clight/lambda_eff**2
 Phi_V_cal = Delta_eff*Phi_lambda_cal
+
+write(*,*) 'Phi_nu_cal = ', Phi_nu_cal, ' W m^-2 Hz^-1'
+write(*,*) 'Phi_lambda_cal = ', Phi_lambda_cal, ' W m^-2 m^-1'
+write(*,*) 'Phi_V_cal = ', Phi_V_cal, ' W m^-2'
 
 ! gnuplotting
 open(unit=10, file='output.gnu', status='unknown')
@@ -183,36 +210,40 @@ do k = 1, m
   call nu(faces, nodes, normals, centres, o, nu_e)
 
   ! integration
-  tmp = 0.d0
-  !$omp parallel do reduction(+:tmp) private(i) shared(faces,Phi_i,I_lambda,mu_i,mu_e,nu_i,nu_e,surf,f,f_L)
+  tot = 0.d0
+  !$omp parallel do reduction(+:tot) private(i) shared(faces,Phi_i,I_lambda,mu_i,mu_e,nu_i,nu_e,surf,f,f_L)
   do i = 1, size(faces,1)
     Phi_i(i) = Phi_lambda*mu_i(i)*nu_i(i)
     f(i) = f_L
     I_lambda(i) = f(i)*Phi_i(i)
-    tmp = tmp + I_lambda(i)*surf(i)*mu_e(i)*nu_e(i)
+    tot = tot + I_lambda(i)*surf(i)*mu_e(i)*nu_e(i)
   enddo
   !$omp end parallel do
 
-  ! scattering
+  ! visibility
   call tau(normals, centres, tau_i)
 
+  ! scattering
+  !$omp parallel do reduction(+:tot) private(i,j,r,tmp) shared(centres,Phi_i,I2_lambda,surf,mu_i,nu_e,tau_i,f)
   do i = 1, size(faces,1)
-    tmp2 = 0.d0
+    tmp = 0.d0
     do j = 1, size(faces,1)
       if (i.ne.j) then
         r = centres(i,:) - centres(j,:)
-        tmp2 = tmp2 + f(j)*Phi_i(j)*surf(j)*tau_i(i,j) / (pi*dot_product(r,r)) 
+        tmp = tmp + f(i)*f(j)*Phi_i(j)*surf(j)*tau_i(i,j) / (pi*dot_product(r,r)) 
       endif
     enddo
-    I2_lambda(i) = tmp2
-    tmp = tmp + I2_lambda(i)*surf(i)*mu_e(i)*nu_e(i)
+    I2_lambda(i) = tmp
+    tot = tot + I2_lambda(i)*surf(i)*mu_e(i)*nu_e(i)
   enddo
-
-  ! 2nd scattering
+  !$omp end parallel do
 
   ! lightcurve
-  Phi_V = Delta_eff*omega*tmp
+  Phi_V = Delta_eff*omega*tot
   V0 = 0.d0 - 2.5d0*log10(Phi_V/Phi_V_cal)
+
+  write(*,*) 'Phi_V = ', Phi_V, ' W m^-2'
+  write(*,*) 'V0 = ', V0, ' mag'
 
   call cpu_time(t2)
   write(*,*) 'k = ', k, ' cpu_time = ', t2-t1, ' s'

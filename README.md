@@ -13,6 +13,7 @@ The following physics was already implemented:
 - lightcurve
 
 ![Screenshot](test_hires/output.I_lambda.49.png)
+![Screenshot](test_hires/output.I2_lambda.01.png)
 
 2DO list:
 
