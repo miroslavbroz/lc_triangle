@@ -1,0 +1,1 @@
+../plt/obj2smesh.awk

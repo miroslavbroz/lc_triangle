@@ -1,0 +1,13 @@
+# vim temporary files
+*.swp
+*.f_ORIG*
+*.f90_ORIG*
+
+# object files
+*.o
+*.mod
+*.pyc
+
+# binary files
+src/test_triangle
+
