@@ -24,6 +24,8 @@ do i = 1, size(normals,1)
       tmp = Xi(dot_product(normals(i,:), centres(j,:)-centres(i,:)))
       tmp = tmp*Xi(dot_product(normals(j,:), centres(i,:)-centres(j,:)))
       tau_i(i,j) = tmp
+    else
+      tau_i(i,j) = 0.d0
     endif
   enddo
 enddo

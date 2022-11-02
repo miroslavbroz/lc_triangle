@@ -10,7 +10,7 @@ set cbl "I_{lambda}"
 
 set cbr [0:]
 
-set view 0,0
+set view 90,0
 set view equal xyz
 set xyplane 0.0
 set palette gray
@@ -27,9 +27,13 @@ sp \
 
 pa -1
 
+set term png small size 1024,1024
+set out "output.I_lambda.01.png"
+rep
+
 q
 
-
-  "<awk '(NR>1)' output.centre" u 2:3:4 w p pt 1 lc 'green' t 'centres',\
+  "<awk '(NR>1)' output.centre.01" u 2:3:4 w p pt 1 lc 'green' t 'centres',\
   "<awk '(NR>1)' output.centre" u 2:3:4:1 w labels tc 'brown' not,\
   "<awk '(ARGIND==1){ s[$1]=$0; }(ARGIND==2) && (FNR>1){ print s[$1],$0; }' output.centre output.normal" u 2:3:4:6:7:8 w vectors lc 'green' t 'normals'
+

@@ -12,6 +12,8 @@ The following physics was already implemented:
 - simplified motion
 - lightcurve
 
+![Screenshot](test_hires/output.I_lambda.49.png)
+
 2DO list:
 
 - Lommel-Seeliger law
