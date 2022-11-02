@@ -6,7 +6,7 @@ load "output.gnu"
 set xl "x"
 set yl "y"
 set zl "z"
-set cbl "tau_i"
+set cbl "tau_i [1]"
 
 set cbr [0:1]
 

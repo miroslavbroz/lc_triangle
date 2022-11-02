@@ -256,7 +256,7 @@ do k = 1, m
   call nu(faces, nodes, normals, centres, s, nu_i)
   call nu(faces, nodes, normals, centres, o, nu_e)
 
-  ! integration
+  ! irradiation
   tot = 0.d0
   !$omp parallel do reduction(+:tot) private(i) shared(faces,Phi_i,I_lambda,mu_i,mu_e,nu_i,nu_e,surf,f,f_L)
   do i = 1, size(faces,1)
@@ -277,7 +277,7 @@ do k = 1, m
     do j = 1, size(faces,1)
       if (i.ne.j) then
         r = centres(i,:) - centres(j,:)
-        tmp = tmp + f(j)*Phi_i(j)*surf(j)*tau_i(i,j) / (pi*dot_product(r,r)) 
+        tmp = tmp + f(j)*Phi_i(j)*surf(j)*tau_i(i,j) / dot_product(r,r)
       endif
     enddo
     I2_lambda(i) = f(i)*tmp

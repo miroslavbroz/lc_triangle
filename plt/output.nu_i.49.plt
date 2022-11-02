@@ -6,7 +6,7 @@ load "output.gnu"
 set xl "x"
 set yl "y"
 set zl "z"
-set cbl "nu_i"
+set cbl "nu_i [1]"
 
 set cbr [-1:1]
 

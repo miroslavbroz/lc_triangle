@@ -6,7 +6,7 @@ load "output.gnu"
 set xl "x"
 set yl "y"
 set zl "z"
-set cbl "I_{lambda}"
+set cbl "I_{lambda} [W m^{-2} sr^{-1} m^{-1}]" offset 3,0
 
 set cbr [0:]
 

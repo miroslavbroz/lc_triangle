@@ -6,7 +6,7 @@ load "output.gnu"
 set xl "x"
 set yl "y"
 set zl "z"
-set cbl "I2_{lambda}" offset 3,0
+set cbl "I2_{lambda} [W m^{-2} sr^{-1} m^{-1}]" offset 3,0
 
 set cbr [1.e3:]
 #set logscale cb
