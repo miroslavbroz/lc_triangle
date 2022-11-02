@@ -25,7 +25,7 @@ obj = \
   src/shadowing.o \
   src/scattering.o \
 
-src/test_triangle: src/test_triangle.f90 $(obj)
+src/lc_triangle: src/lc_triangle.f90 $(obj)
 	$(f90) $(opt) $(obj) -o $@ $<
 
 $(obj): %.o:%.f90
