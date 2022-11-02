@@ -1,8 +1,55 @@
-! test_triangle.f90
+! lc_triangle.f90
 ! Test of lightcurve computation for a general triangular mesh.
-! Miroslav Broz (miroslav.broz@email.cz), Oct 28th 2022
+! Miroslav Broz (miroslav.broz@email.cz), Nov 1st 2022
 
-program test_triangle
+! Notation:
+!
+! I_lambda       .. monochromatic intensity (ces. intenzita), W m^-2 sr^-1 m^-1
+! I2_lambda      .. monochromatic intensity, scattered
+! B_lambda       .. Planck monochromatic intensity
+! Phi_lambda     .. monochromatic flux, W m^-2 m^-1
+! Phi_lambda_cal .. monochromatic flux, calibration
+! Phi_nu_cal     .. monochromatic flux, calibration, W m^-2 Hz^-1
+! Phi_i          .. monochromatic flux, incoming
+! Phi_V          .. passband flux, total, outgoing, W m^-2
+! Phi_V_cal      .. passband flux, calibration
+! J_lambda       .. monochromatic luminosity (ces. zarivost), W sr^-1 m^-1
+! P_lambda       .. monochromatic power, W m^-1
+! P_V            .. passband power, W
+! mu_i           .. directional cosine, incoming, cos(alpha)
+! mu_e           .. directional cosine, outgoing
+! nu_i           .. shadowing, incoming, 0 or 1
+! nu_e           .. shadowing, outgoing
+! tau_i          .. visibility (mutual), cos(alpha)*cos(alpha')
+! omega          .. solid angle, sr
+! lambda_eff     .. effective wavelength, m
+! Delta_eff      .. effective pasband, m
+! f              .. bi-directional distribution function, 1
+! f_L            .. Lambert law
+! f_g            .. geometric law
+! f_LS           .. Lommel-Seeliger law
+! A_w            .. single-scattering albedo, 1
+! A_hL           .. hemispherical albedo, Lambert
+! A_gL           .. geometric albedo, Lambert
+! A_BL           .. Bond albed, Lambert
+
+! nodes          .. nodes, m
+! faces          .. triangular faces, 1
+! elems          .. tetrahedral elements, 1
+! normals        .. normals of triangles, 1
+! centres        .. centres of triangles, m
+! surf           .. surface of triangles, m^2
+! vols           .. volumes of tetrahedra, m^3
+! capR           .. radius, m
+! capS           .. surface area, m^2
+! capV           .. volume, m^3
+! s              .. target->sun unitvector
+! o              .. target->observer unitvector
+! d1             .. target-sun distance, m
+! d2             .. target-observer distance, m
+
+
+program lc_triangle
 
 use const_module
 use normalize_module
@@ -230,10 +277,10 @@ do k = 1, m
     do j = 1, size(faces,1)
       if (i.ne.j) then
         r = centres(i,:) - centres(j,:)
-        tmp = tmp + f(i)*f(j)*Phi_i(j)*surf(j)*tau_i(i,j) / (pi*dot_product(r,r)) 
+        tmp = tmp + f(j)*Phi_i(j)*surf(j)*tau_i(i,j) / (pi*dot_product(r,r)) 
       endif
     enddo
-    I2_lambda(i) = tmp
+    I2_lambda(i) = f(i)*tmp
     tot = tot + I2_lambda(i)*surf(i)*mu_e(i)*nu_e(i)
   enddo
   !$omp end parallel do
@@ -267,6 +314,6 @@ do k = 1, m
 
 enddo
 
-end program test_triangle
+end program lc_triangle
 
 
