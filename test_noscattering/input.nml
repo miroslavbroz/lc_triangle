@@ -13,5 +13,8 @@ v_ = -5.0d0, 0.0d0, 0.0d0
 dt = 0.01d0
 nsteps = 100
 
+use_scattering = .false.
+debug = .false.
+
 / ! end-of-input
 

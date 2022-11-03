@@ -6,7 +6,7 @@ module vector_product_module
 
 contains
 
-function vector_product(a, b)
+pure function vector_product(a, b)
 
 implicit none
 double precision, dimension(3) :: vector_product

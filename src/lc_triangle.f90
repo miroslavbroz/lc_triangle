@@ -32,7 +32,7 @@
 ! A_w            .. single-scattering albedo, 1
 ! A_hL           .. hemispherical albedo, Lambert
 ! A_gL           .. geometric albedo, Lambert
-! A_BL           .. Bond albed, Lambert
+! A_BL           .. Bond albedo, Lambert
 
 ! nodes          .. nodes, m
 ! faces          .. triangular faces, 1
@@ -58,7 +58,6 @@ use normalize_module
 use normal_module
 use centre_module
 use surface_module
-use volume_module
 use planck_module
 use read_input_module
 use read_face_module
@@ -133,7 +132,6 @@ write(*,*)
 allocate(normals(size(faces,1),3))
 allocate(centres(size(faces,1),3))
 allocate(surf(size(faces,1)))
-allocate(vols(size(elems,1)))
 allocate(mu_i(size(faces,1)))
 allocate(mu_e(size(faces,1)))
 allocate(nu_i(size(faces,1)))
@@ -141,10 +139,10 @@ allocate(nu_e(size(faces,1)))
 allocate(nutmp_i(size(faces,1),size(faces,1)))
 allocate(nutmp_e(size(faces,1),size(faces,1)))
 allocate(tau_i(size(faces,1),size(faces,1)))
+allocate(f(size(faces,1)))
 allocate(Phi_i(size(faces,1)))
 allocate(I_lambda(size(faces,1)))
 allocate(I2_lambda(size(faces,1)))
-allocate(f(size(faces,1)))
 
 ! geometry
 call normal(faces, nodes, normals)
@@ -158,6 +156,7 @@ alpha = acos(dot_product(s,o))
 write(*,*) 'capS = ', capS, ' m^2'
 write(*,*) 'capR = ', sqrt(capS/(4.d0*pi)), ' m  (surface-equivalent)'
 write(*,*) 'alpha = ', alpha, ' rad = ', alpha/deg, ' deg'
+write(*,*) ''
 
 ! stellar surface
 T_star = 5770.d0  ! K
@@ -236,7 +235,6 @@ do k = 1, nsteps
   do i = 1, size(nodes2,1)
     nodes(i+size(nodes1,1),:) = nodes2(i,:) + r
   enddo
-  call normal(faces, nodes, normals)
   call centre(faces, nodes, centres)
 
   ! non-illuminated || non-visible won't be computed
@@ -270,18 +268,20 @@ do k = 1, nsteps
   close(20)
 
   ! debugging
-  if ((k.eq.1).or.(k.eq.49).or.(k.eq.50)) then
-    write(str,'(i0.2)') k
-    call write1("output.I_lambda." // trim(str), I_lambda)
-    call write1("output.I2_lambda." // trim(str), I2_lambda)
-    call write1("output.nu_i." // trim(str), nu_i)
-    call write1("output.mu_i." // trim(str), mu_i)
-    call write1("output.f." // trim(str), f)
-    call write_node("output.node." // trim(str), nodes)
-    call write_face("output.face." // trim(str), faces)
-    call write_node("output.normal." // trim(str), normals)
-    call write_node("output.centre." // trim(str), centres)
-    if (size(faces,1).lt.200) call write2("output.tau_i." // trim(str), tau_i)
+  if (debug) then
+    if ((k.eq.1).or.(k.eq.49).or.(k.eq.50)) then
+      write(str,'(i0.2)') k
+      call write1("output.I_lambda." // trim(str), I_lambda)
+      call write1("output.I2_lambda." // trim(str), I2_lambda)
+      call write1("output.nu_i." // trim(str), nu_i)
+      call write1("output.mu_i." // trim(str), mu_i)
+      call write1("output.f." // trim(str), f)
+      call write_node("output.node." // trim(str), nodes)
+      call write_face("output.face." // trim(str), faces)
+      call write_node("output.normal." // trim(str), normals)
+      call write_node("output.centre." // trim(str), centres)
+      if (size(faces,1).lt.200) call write2("output.tau_i." // trim(str), tau_i)
+    endif
   endif
 
 enddo

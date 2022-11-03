@@ -54,6 +54,8 @@ end subroutine non
 
 subroutine nu(faces, nodes, normals, centres, s, nu_i)
 
+use input_module, only: use_shadowing
+use boundingbox_module
 use intersect_AB_t_module
 
 implicit none
@@ -65,10 +67,17 @@ double precision, dimension(:), intent(inout) :: nu_i
 integer :: i, j, k
 double precision, dimension(3,3) :: t
 double precision, dimension(3) :: A, B, C
+double precision, dimension(3) :: area
 double precision :: tmp
 logical :: has_solution
 
-!$omp parallel do private(i,j,k,A,B,C,t,has_solution,tmp) shared(nodes,faces,centres,s,nu_i)
+double precision, dimension(:,:), pointer, save :: boxes
+
+if (.not.use_shadowing) return
+
+call boundingbox(faces, nodes, s, boxes)
+
+!$omp parallel do private(i,j,k,A,B,C,t,has_solution,tmp,area) shared(nodes,faces,centres,s,nu_i)
 do i = 1, size(faces,1)
   if (nu_i(i).gt.0.d0) then
 
@@ -80,6 +89,13 @@ do i = 1, size(faces,1)
 
       if (i.ne.j) then
         if (nu_i(j).gt.0.d0) then
+
+          if ((boxes(j,2).lt.boxes(i,1)).or.(boxes(j,1).gt.boxes(i,2) &
+            .or.(boxes(j,4).lt.boxes(i,3)).or.(boxes(j,3).gt.boxes(i,4)))) then
+            j = j+1
+            cycle
+          endif
+
           C = centres(j,:)-centres(i,:)
           tmp = dot_product(C, normals(i,:))
           if (tmp.gt.0.d0) then
@@ -93,7 +109,9 @@ do i = 1, size(faces,1)
             if (has_solution) then
               nu_i(i) = 0.d0
             endif
+
           endif
+
         endif
       endif
 

@@ -11,6 +11,7 @@ The following physics was already implemented:
 - Lommel law
 - Hapke law
 - above-horizon test
+- bounding-box test
 - Openmp parallelization
 - simplified motion
 - lightcurve
@@ -20,7 +21,6 @@ The following physics was already implemented:
 
 2DO list:
 
-- bounding-box test
 - body rotation
 - 2D mesh projection
 - 2D vector product

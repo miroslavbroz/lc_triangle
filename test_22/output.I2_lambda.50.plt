@@ -1,1 +1,0 @@
-../plt/output.I2_lambda.50.plt

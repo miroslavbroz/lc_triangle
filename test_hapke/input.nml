@@ -4,22 +4,8 @@ f_node1 = 'sphere.1.node'
 f_face1 = 'sphere.1.face'
 f_node2 = 'sphere.1.node'
 f_face2 = 'sphere.1.face'
-unit1 = 1.0d0
-unit2 = 1.0d0
-
-lambda_eff = 545.d-9  ! m
-Delta_eff = 85.d-9  ! m
-
-Phi_nu_cal = 3.636d-23  ! W m^-2 Hz^-1; Bessel (2000)
-
-A_w = 1.d0
 
 law = 'Hapke'
-
-s = 0.0d0, 0.0d0, 1.0d0
-o = 0.0d0, 0.0d0, 1.0d0
-d1 = 1.d0
-d2 = 1.d0
 
 r_ =  2.5d0, 0.0d0, 2.5d0
 v_ = -5.0d0, 0.0d0, 0.0d0

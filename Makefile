@@ -27,6 +27,7 @@ obj = \
   src/volume.o \
   src/planck.o \
   src/intersect_AB_t.o \
+  src/boundingbox.o \
   src/shadowing.o \
   src/scattering.o \
 
@@ -41,6 +42,6 @@ $(obj): %.o:%.f90
 	$(f90) $(opt) -o $@ -c $<
 
 clean:
-	rm $(obj)
 	rm src/*.mod
+	rm $(obj)
 

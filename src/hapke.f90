@@ -10,8 +10,6 @@ contains
 
 double precision function f_hapke(f_L, mu_i, mu_e, alpha)
 
-use input_module, f_notused => f_L
-
 implicit none
 double precision, intent(in) :: f_L, mu_i, mu_e, alpha
 double precision :: tmp
@@ -28,7 +26,7 @@ end function f_hapke
 
 double precision function H(mu)
 
-use input_module
+use input_module, only : A_w
 
 implicit none
 double precision, intent(in) :: mu
