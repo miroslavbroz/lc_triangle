@@ -1,7 +1,7 @@
 # vim temporary files
 *.swp
-*.f_ORIG*
 *.f90_ORIG*
+TMP
 
 # object files
 *.o

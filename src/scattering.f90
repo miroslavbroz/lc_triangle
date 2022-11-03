@@ -10,19 +10,23 @@ contains
 
 subroutine tau(normals, centres, tau_i)
 
+use normalize_module
+
 implicit none
 double precision, dimension(:,:), pointer, intent(in) :: normals, centres
 double precision, dimension(:,:), intent(inout) :: tau_i
 
 integer :: i, j
+double precision, dimension(3) :: r
 double precision :: tmp
 
-!$omp parallel do private(i,j,tmp) shared(normals,centres,tau_i)
+!$omp parallel do private(i,j,tmp,r) shared(normals,centres,tau_i)
 do i = 1, size(normals,1)
   do j = 1, size(normals,1)
     if (i.ne.j) then
-      tmp = Xi(dot_product(normals(i,:), centres(j,:)-centres(i,:)))
-      tmp = tmp*Xi(dot_product(normals(j,:), centres(i,:)-centres(j,:)))
+      r = normalize(centres(j,:)-centres(i,:))
+      tmp = Xi(dot_product(normals(i,:), r))
+      tmp = tmp*Xi(dot_product(normals(j,:), -r))
       tau_i(i,j) = tmp
     else
       tau_i(i,j) = 0.d0

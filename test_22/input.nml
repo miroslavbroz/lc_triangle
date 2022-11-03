@@ -1,0 +1,36 @@
+&input
+
+f_node1 = '22.1.node'
+f_face1 = '22.1.face'
+f_node2 = 'sphere.1.node'
+f_face2 = 'sphere.1.face'
+
+unit1 = 1.d3  ! m
+unit2 = 30.d3  ! m
+
+lambda_eff = 545.d-9  ! m
+Delta_eff = 85.d-9  ! m
+
+Phi_nu_cal = 3.636d-23  ! W m^-2 Hz^-1; Bessel (2000)
+
+A_w = 1.d0
+
+law = 'Lambert'
+
+s = 0.0d0, 0.0d0, 1.0d0
+o = 0.0d0, 0.0d0, 1.0d0
+d1 = 1.d0
+d2 = 1.d0
+
+r_ =  200.d3, 0.d3, 200.d3
+v_ = -400.d3, 0.d3, 0.d3
+dt = 0.01d0
+nsteps = 100
+
+B0 = 0.1d0		! opposition effect amplitude; 1
+minh = 0.2d0		! opposition effect width; 1
+ming = 0.d0		! asymmetry of scattering; 1
+bartheta = 0.d0		! average slope, macroscopic roughness; rad <- NOT USED!
+
+/ ! end-of-input
+

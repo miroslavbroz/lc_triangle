@@ -15,6 +15,7 @@ set view equal xyz
 set xyplane 0.0
 set palette defined (\
   0.0 "white",\
+  0.01 "cyan",\
   1.0 "green" \
   )
 set surface hidden3d

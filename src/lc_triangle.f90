@@ -104,6 +104,10 @@ call read_face(f_face1, faces1)
 call read_node(f_node2, nodes2)
 call read_face(f_face2, faces2)
 
+! units
+nodes1 = nodes1*unit1
+nodes2 = nodes2*unit2
+
 ! ... and merge them
 allocate(nodes(size(nodes1,1)+size(nodes2,1), size(nodes1,2))) 
 allocate(faces(size(faces1,1)+size(faces2,1), size(faces1,2))) 
@@ -151,6 +155,8 @@ call mu(normals, s, mu_i)
 call mu(normals, o, mu_e)
 alpha = acos(dot_product(s,o))
 
+write(*,*) 'capS = ', capS, ' m^2'
+write(*,*) 'capR = ', sqrt(capS/(4.d0*pi)), ' m  (surface-equivalent)'
 write(*,*) 'alpha = ', alpha, ' rad = ', alpha/deg, ' deg'
 
 ! stellar surface
@@ -221,16 +227,16 @@ write(10,*) 'o2 = ', o(2)
 write(10,*) 'o3 = ', o(3)
 close(10)
 
-m = 100
-do k = 1, m
+do k = 1, nsteps
   call cpu_time(t1)
 
   ! orbital motion (simplified)
-  r = (/2.5d0-5.d0*dble(k)/m, 0.d0, 2.5d0/)
+  r = r_ + v_*dt*k
 
   do i = 1, size(nodes2,1)
     nodes(i+size(nodes1,1),:) = nodes2(i,:) + r
   enddo
+  call normal(faces, nodes, normals)
   call centre(faces, nodes, centres)
 
   ! non-illuminated || non-visible won't be computed
