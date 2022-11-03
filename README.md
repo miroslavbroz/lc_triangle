@@ -8,7 +8,10 @@ The following physics was already implemented:
 - visibility (mutual)
 - scatterring (mutual)
 - Lambert law
+- Lommel law
+- Hapke law
 - above-horizon test
+- Openmp parallelization
 - simplified motion
 - lightcurve
 
@@ -17,8 +20,6 @@ The following physics was already implemented:
 
 2DO list:
 
-- Lommel-Seeliger law
-- Hapke law
 - bounding-box test
 - body rotation
 - 2D mesh projection
