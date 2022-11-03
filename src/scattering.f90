@@ -17,7 +17,7 @@ double precision, dimension(:,:), intent(inout) :: tau_i
 integer :: i, j
 double precision :: tmp
 
-!$omp parallel do private(i,j) shared(normals,centres)
+!$omp parallel do private(i,j,tmp) shared(normals,centres,tau_i)
 do i = 1, size(normals,1)
   do j = 1, size(normals,1)
     if (i.ne.j) then

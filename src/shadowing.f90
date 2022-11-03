@@ -8,22 +8,47 @@ contains
 
 ! Dicrectional cosine.
 
-subroutine mu(norms, s, mu_i)
+subroutine mu(normals, s, mu_i)
 
 implicit none
-double precision, dimension(:,:), pointer, intent(in) :: norms
+double precision, dimension(:,:), pointer, intent(in) :: normals
 double precision, dimension(3), intent(in) :: s
 double precision, dimension(:), pointer, intent(out) :: mu_i
 
 integer :: i
 
-!$omp parallel do private(i) shared(norms,mu_i,s)
-do i = 1, size(norms,1)
-  mu_i(i) = max(dot_product(norms(i,:), s), 0.d0)
+!$omp parallel do private(i) shared(normals,mu_i,s)
+do i = 1, size(normals,1)
+  mu_i(i) = max(dot_product(normals(i,:), s), 0.d0)
 enddo
 !$omp end parallel do
 
+return
 end subroutine mu
+
+! Non-illuminated || non-visible won't be computed.
+
+subroutine non(mu_i, mu_e, nu_i, nu_e)
+
+implicit none
+double precision, dimension(:), intent(in) :: mu_i, mu_e
+double precision, dimension(:), intent(out) :: nu_i, nu_e
+
+integer :: i
+
+nu_i = 1.d0
+nu_e = 1.d0
+!$omp parallel do private(i) shared(mu_i,mu_e,nu_i,nu_e)
+do i = 1, size(mu_i,1)
+  if ((mu_i(i).eq.0.d0).or.(mu_e(i).eq.0.d0)) then
+    nu_i(i) = 0.d0
+    nu_e(i) = 0.d0
+  endif
+enddo
+!$omp end parallel do
+
+return
+end subroutine non
 
 ! Mutual shadowing.
 

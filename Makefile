@@ -1,16 +1,21 @@
 
 f90 = gfortran
 
-opt = -O3
-opt = -O3 -pg
-opt = -O3 -fopenmp -Jsrc
+opt = -O3 -Jsrc
+#opt = -O3 -Jsrc -pg 
+opt = -O3 -Jsrc -fopenmp -flto -Ofast
 
 obj = \
   src/const.o \
+  src/input.o \
   src/vector_product.o \
   src/normalize.o \
   src/normal.o \
   src/centre.o \
+  src/lambert.o \
+  src/lommel.o \
+  src/hapke.o \
+  src/read_input.o \
   src/read_face.o \
   src/read_node.o \
   src/read_elem.o \
@@ -25,7 +30,11 @@ obj = \
   src/shadowing.o \
   src/scattering.o \
 
-src/lc_triangle: src/lc_triangle.f90 $(obj)
+inc = \
+  src/integrate_over_S.inc \
+  src/integrate_scattered.inc \
+
+src/lc_triangle: src/lc_triangle.f90 $(obj) $(inc)
 	$(f90) $(opt) $(obj) -o $@ $<
 
 $(obj): %.o:%.f90

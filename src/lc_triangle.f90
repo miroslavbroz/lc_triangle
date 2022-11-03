@@ -18,6 +18,7 @@
 ! P_V            .. passband power, W
 ! mu_i           .. directional cosine, incoming, cos(alpha)
 ! mu_e           .. directional cosine, outgoing
+! alpha          .. phase angle, sun-target-observer
 ! nu_i           .. shadowing, incoming, 0 or 1
 ! nu_e           .. shadowing, outgoing
 ! tau_i          .. visibility (mutual), cos(alpha)*cos(alpha')
@@ -52,12 +53,14 @@
 program lc_triangle
 
 use const_module
+use input_module
 use normalize_module
 use normal_module
 use centre_module
 use surface_module
 use volume_module
 use planck_module
+use read_input_module
 use read_face_module
 use read_node_module
 use read_elem_module
@@ -67,6 +70,7 @@ use write_face_module
 use write_node_module
 use shadowing_module
 use scattering_module
+use hapke_module
 
 implicit none
 
@@ -80,31 +84,29 @@ double precision, dimension(:,:), pointer :: nutmp_i, nutmp_e
 double precision, dimension(:,:), pointer :: tau_i
 
 integer :: i, j, k, n, m
-double precision, dimension(3) :: r, s, o
-double precision :: capR, capS, capV, unit
-double precision :: A_w, A_hL, A_gL, A_BL, A_gLS, A_BLS
-double precision :: f_L, f_g, f_LS
-double precision :: d1, d2, omega, T
-double precision :: lambda_eff, Delta_eff
-double precision :: Phi_nu_cal, Phi_lambda_cal, Phi_V_cal
-double precision :: B_lambda, J_lambda, P_lambda, Phi_lambda, P_V, Phi_V, V0
+double precision, dimension(3) :: r
+double precision :: capR, capS, capV
+double precision :: A_hL, A_gL, A_BL
+double precision :: alpha, omega, T_star
+double precision :: B_lambda, J_lambda, P_lambda, P_V, Phi_V, V0
 double precision :: tot, tmp
+double precision :: varphi_i, varphi_e
 double precision :: t1, t2
 character(len=80) :: str
 
-! read 2 spheres...
-call read_node("sphere.1.node", nodes1)
-call read_face("sphere.1.face", faces1)
-call read_elem("sphere.1.ele", elems1)
+! input parameters
+call read_input()
 
-call read_node("sphere.1.node", nodes2)
-call read_face("sphere.1.face", faces2)
-call read_elem("sphere.1.ele", elems2)
+! read 2 objects...
+call read_node(f_node1, nodes1)
+call read_face(f_face1, faces1)
+
+call read_node(f_node2, nodes2)
+call read_face(f_face2, faces2)
 
 ! ... and merge them
 allocate(nodes(size(nodes1,1)+size(nodes2,1), size(nodes1,2))) 
 allocate(faces(size(faces1,1)+size(faces2,1), size(faces1,2))) 
-allocate(elems(size(elems1,1)+size(elems2,1), size(elems1,2))) 
 
 do j = 1, size(nodes1,1)
   nodes(j,:) = nodes1(j,:)
@@ -118,16 +120,9 @@ enddo
 do j = 1, size(faces2,1)
   faces(j+size(faces1,1),:) = faces2(j,:) + size(nodes1,1)
 enddo
-do j = 1, size(elems1,1)
-  elems(j,:) = elems1(j,:)
-enddo
-do j = 1, size(elems2,1)
-  elems(j+size(elems1,1),:) = elems2(j,:) + size(nodes1,1)
-enddo
 
 write(*,*) 'nnodes = ', size(nodes,1)
 write(*,*) 'nfaces = ', size(faces,1)
-write(*,*) 'nelems = ', size(elems,1)
 write(*,*)
 
 ! allocation
@@ -148,23 +143,20 @@ allocate(I2_lambda(size(faces,1)))
 allocate(f(size(faces,1)))
 
 ! geometry
-s = normalize((/0.d0, 0.d0, 1.d0/))  ! target->sun
-o = normalize((/0.d0, 0.d0, 1.d0/))  ! target->observer
-
-! pre-computed
 call normal(faces, nodes, normals)
 call centre(faces, nodes, centres)
 capS = surface(faces, nodes, surf)
 
 call mu(normals, s, mu_i)
 call mu(normals, o, mu_e)
+alpha = acos(dot_product(s,o))
+
+write(*,*) 'alpha = ', alpha, ' rad = ', alpha/deg, ' deg'
 
 ! stellar surface
-lambda_eff = 545.d-9  ! m
-Delta_eff = 85.d-9  ! m
-T = 5770.d0  ! K
+T_star = 5770.d0  ! K
 
-B_lambda = planck(T, lambda_eff)
+B_lambda = planck(T_star, lambda_eff)
 Phi_lambda = pi*B_lambda                ! over omega, half-space, cosine
 J_lambda = pi*R_S**2 * B_lambda         ! over S, visible, cosine
 P_lambda = 4.d0*pi * J_lambda           ! over omega, full-space
@@ -179,11 +171,9 @@ write(*,*) 'Phi_lambda = ', Phi_lambda, ' W m^-2 m^-1'
 write(*,*) 'J_lambda = ', J_lambda, ' W sr^-1 m^-1'
 write(*,*) 'P_lambda = ', P_lambda, ' W m^-1'
 write(*,*) 'P_V = ', P_V, ' W'
+write(*,*) ''
 
 ! asteroid surface
-d1 = 1.d0*au
-A_w = 1.d0
-
 Phi_lambda = P_lambda/(4.d0*pi*d1**2)
 Phi_V = Phi_lambda*Delta_eff
 
@@ -191,6 +181,8 @@ f_L = A_w/(4.d0*pi)  ! sr^-1
 A_hL = pi*f_L
 A_gL = 2.d0/3.d0*pi*f_L
 A_BL = pi*f_L
+
+call init_hapke(alpha)
 
 write(*,*) '# at asteroid surface:'
 write(*,*) 'd1 = ', d1/au, ' au'
@@ -201,22 +193,23 @@ write(*,*) 'A_w = ', A_w
 write(*,*) 'A_hL = ', A_hL
 write(*,*) 'A_gL = ', A_gL
 write(*,*) 'A_BL = ', A_BL
+write(*,*) ''
 
 ! observer location
-d2 = 1.d0*au
 omega = 1.d0/(d2**2)  ! sr
 
+write(*,*) '# at observer location:'
 write(*,*) 'd2 = ', d2/au, ' au'
 write(*,*) 'omega = ', omega, ' sr'
 
 ! calibration
-Phi_nu_cal = 3.636d-23  ! W m^-2 Hz^-1; Bessel (2000)
 Phi_lambda_cal = Phi_nu_cal*clight/lambda_eff**2
 Phi_V_cal = Delta_eff*Phi_lambda_cal
 
 write(*,*) 'Phi_nu_cal = ', Phi_nu_cal, ' W m^-2 Hz^-1'
 write(*,*) 'Phi_lambda_cal = ', Phi_lambda_cal, ' W m^-2 m^-1'
 write(*,*) 'Phi_V_cal = ', Phi_V_cal, ' W m^-2'
+write(*,*) ''
 
 ! gnuplotting
 open(unit=10, file='output.gnu', status='unknown')
@@ -241,49 +234,20 @@ do k = 1, m
   call centre(faces, nodes, centres)
 
   ! non-illuminated || non-visible won't be computed
-  nu_i = 1.d0
-  nu_e = 1.d0
-  !$omp parallel do private(i) shared(mu_i,mu_e,nu_i,nu_e)
-  do i = 1, size(faces,1)
-    if ((mu_i(i).eq.0.d0).or.(mu_e(i).eq.0.d0)) then
-      nu_i(i) = 0.d0
-      nu_e(i) = 0.d0
-    endif
-  enddo
-  !$omp end parallel do
+  call non(mu_i, mu_e, nu_i, nu_e)
 
   ! shadowing
   call nu(faces, nodes, normals, centres, s, nu_i)
   call nu(faces, nodes, normals, centres, o, nu_e)
 
-  ! irradiation
-  tot = 0.d0
-  !$omp parallel do reduction(+:tot) private(i) shared(faces,Phi_i,I_lambda,mu_i,mu_e,nu_i,nu_e,surf,f,f_L)
-  do i = 1, size(faces,1)
-    Phi_i(i) = Phi_lambda*mu_i(i)*nu_i(i)
-    f(i) = f_L
-    I_lambda(i) = f(i)*Phi_i(i)
-    tot = tot + I_lambda(i)*surf(i)*mu_e(i)*nu_e(i)
-  enddo
-  !$omp end parallel do
+  ! integration
+  include 'integrate_over_S.inc'
 
   ! visibility
   call tau(normals, centres, tau_i)
 
   ! scattering
-  !$omp parallel do reduction(+:tot) private(i,j,r,tmp) shared(centres,Phi_i,I2_lambda,surf,mu_i,nu_e,tau_i,f)
-  do i = 1, size(faces,1)
-    tmp = 0.d0
-    do j = 1, size(faces,1)
-      if (i.ne.j) then
-        r = centres(i,:) - centres(j,:)
-        tmp = tmp + f(j)*Phi_i(j)*surf(j)*tau_i(i,j) / dot_product(r,r)
-      endif
-    enddo
-    I2_lambda(i) = f(i)*tmp
-    tot = tot + I2_lambda(i)*surf(i)*mu_e(i)*nu_e(i)
-  enddo
-  !$omp end parallel do
+  include 'integrate_scattered.inc'
 
   ! lightcurve
   Phi_V = Delta_eff*omega*tot
@@ -305,6 +269,8 @@ do k = 1, m
     call write1("output.I_lambda." // trim(str), I_lambda)
     call write1("output.I2_lambda." // trim(str), I2_lambda)
     call write1("output.nu_i." // trim(str), nu_i)
+    call write1("output.mu_i." // trim(str), mu_i)
+    call write1("output.f." // trim(str), f)
     call write_node("output.node." // trim(str), nodes)
     call write_face("output.face." // trim(str), faces)
     call write_node("output.normal." // trim(str), normals)

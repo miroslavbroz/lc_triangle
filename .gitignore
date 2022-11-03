@@ -9,5 +9,5 @@
 *.pyc
 
 # binary files
-src/test_triangle
+src/lc_triangle
 
