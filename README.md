@@ -7,6 +7,7 @@ The following physics was already implemented:
 - shadowing (non-convex), eclipses, transits, ...
 - visibility (mutual)
 - scatterring (mutual)
+- simplified thermal contribution
 - Lambert law
 - Lommel law
 - Hapke law
