@@ -36,6 +36,8 @@ write(*,*) 'f_node2 = ', trim(f_node2)
 write(*,*) 'f_face2 = ', trim(f_face2)
 write(*,*) 'unit1 = ', unit1, ' m'
 write(*,*) 'unit2 = ', unit2, ' m'
+write(*,*) 'T_star = ', T_star, ' K'
+write(*,*) 'T_eq = ', T_eq, ' K'
 write(*,*) 'Phi_nu_cal = ', Phi_nu_cal, ' W m^-2 sr^-1 Hz^-1'
 write(*,*) 'A_w = ', A_w
 write(*,*) 's = ', s
@@ -50,6 +52,9 @@ write(*,*) 'B0 = ', B0
 write(*,*) 'minh = ', minh
 write(*,*) 'ming = ', ming
 write(*,*) 'bartheta = ', bartheta
+write(*,*) 'use_shadowing = ', use_shadowing
+write(*,*) 'use_scattering = ', use_scattering
+write(*,*) 'use_thermal = ', use_thermal
 
 if (law(1:2).eq.'La') then
   f_ptr => f_lambert

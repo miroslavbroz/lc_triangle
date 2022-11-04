@@ -34,6 +34,7 @@ obj = \
 inc = \
   src/integrate_over_S.inc \
   src/integrate_scattered.inc \
+  src/integrate_thermal.inc \
 
 src/lc_triangle: src/lc_triangle.f90 $(obj) $(inc)
 	$(f90) $(opt) $(obj) -o $@ $<

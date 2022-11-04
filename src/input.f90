@@ -12,6 +12,8 @@ double precision :: unit1 = 1.d0  ! m
 double precision :: unit2 = 1.d0  ! m
 double precision :: lambda_eff = 545.d-9  ! m
 double precision :: Delta_eff = 85.d-9  ! m
+double precision :: T_star = 5770.d0  ! K
+double precision :: T_eq = 300.d0  ! K
 double precision :: Phi_nu_cal = 3.636d-23  ! W m^-2 Hz^-1; Bessel (2000)
 double precision :: A_w = 1.d0
 character(len=16) :: law = 'Lambert'
@@ -33,6 +35,7 @@ double precision :: bartheta = 0.d0  ! average slope, macroscopic roughness; rad
 
 logical :: use_shadowing = .true.
 logical :: use_scattering = .true.
+logical :: use_thermal = .true.
 logical :: debug = .true.
 
 ! common
@@ -44,6 +47,8 @@ namelist /input/ &
   unit2, &
   lambda_eff, &
   Delta_eff, &
+  T_star, &
+  T_eq, &
   Phi_nu_cal, &
   A_w, &
   law, &
@@ -61,6 +66,7 @@ namelist /input/ &
   bartheta, &
   use_shadowing, &
   use_scattering, &
+  use_thermal, &
   debug
 
 abstract interface

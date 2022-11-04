@@ -7,10 +7,10 @@
 if (use_scattering) then
 
   !$omp parallel do reduction(+:tot) private(i,j,r,tmp) shared(centres,mu_e,nu_e,tau_i,surf,f,Phi_i,I2_lambda,f_L)
-  do i = 1, size(centres,1)
+  do i = 1, size(surf,1)
     if (nu_e(i).ne.0.d0) then
       tmp = 0.d0
-      do j = 1, size(centres,1)
+      do j = 1, size(surf,1)
         if (i.ne.j) then
           r = centres(i,:) - centres(j,:)
           tmp = tmp + f_L*Phi_i(j)*surf(j)*tau_i(i,j) / dot_product(r,r)

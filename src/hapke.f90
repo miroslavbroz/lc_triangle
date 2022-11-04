@@ -50,6 +50,7 @@ r0 = (1.d0-sqrt(1.d0-A_w))/(1.d0+sqrt(1.d0-A_w))
 write(*,*) 'B = ', B 
 write(*,*) 'P = ', P 
 write(*,*) 'r0 = ', r0 
+write(*,*) ''
 
 end subroutine init_hapke
 

@@ -78,7 +78,8 @@ integer, dimension(:,:), pointer :: elems, elems1, elems2
 double precision, dimension(:,:), pointer :: nodes, nodes1, nodes2
 double precision, dimension(:,:), pointer :: normals, centres
 double precision, dimension(:), pointer :: surf, vols
-double precision, dimension(:), pointer :: mu_i, mu_e, nu_i, nu_e, Phi_i, f, I_lambda, I2_lambda
+double precision, dimension(:), pointer :: mu_i, mu_e, nu_i, nu_e, f, Phi_i
+double precision, dimension(:), pointer :: I_lambda, I2_lambda, I3_lambda
 double precision, dimension(:,:), pointer :: nutmp_i, nutmp_e
 double precision, dimension(:,:), pointer :: tau_i
 
@@ -86,8 +87,9 @@ integer :: i, j, k, n, m
 double precision, dimension(3) :: r
 double precision :: capR, capS, capV
 double precision :: A_hL, A_gL, A_BL
-double precision :: alpha, omega, T_star
+double precision :: alpha, omega
 double precision :: B_lambda, J_lambda, P_lambda, P_V, Phi_V, V0
+double precision :: B_thermal, Phi_thermal
 double precision :: tot, tmp
 double precision :: varphi_i, varphi_e
 double precision :: t1, t2
@@ -126,7 +128,7 @@ enddo
 
 write(*,*) 'nnodes = ', size(nodes,1)
 write(*,*) 'nfaces = ', size(faces,1)
-write(*,*)
+write(*,*) ''
 
 ! allocation
 allocate(normals(size(faces,1),3))
@@ -143,6 +145,7 @@ allocate(f(size(faces,1)))
 allocate(Phi_i(size(faces,1)))
 allocate(I_lambda(size(faces,1)))
 allocate(I2_lambda(size(faces,1)))
+allocate(I3_lambda(size(faces,1)))
 
 ! geometry
 call normal(faces, nodes, normals)
@@ -159,8 +162,6 @@ write(*,*) 'alpha = ', alpha, ' rad = ', alpha/deg, ' deg'
 write(*,*) ''
 
 ! stellar surface
-T_star = 5770.d0  ! K
-
 B_lambda = planck(T_star, lambda_eff)
 Phi_lambda = pi*B_lambda                ! over omega, half-space, cosine
 J_lambda = pi*R_S**2 * B_lambda         ! over S, visible, cosine
@@ -169,6 +170,7 @@ P_lambda = 4.d0*pi*R_S**2 * Phi_lambda  ! over S
 P_V = Delta_eff*P_lambda                ! over lambda
 
 write(*,*) '# at stellar surface:'
+write(*,*) 'T_star = ', T_star, ' K'
 write(*,*) 'lambda_eff = ', lambda_eff, ' m'
 write(*,*) 'Delta_eff = ', Delta_eff, ' m'
 write(*,*) 'B_lambda = ', B_lambda, ' W m^-2 sr^-1 m^-1'
@@ -198,6 +200,14 @@ write(*,*) 'A_w = ', A_w
 write(*,*) 'A_hL = ', A_hL
 write(*,*) 'A_gL = ', A_gL
 write(*,*) 'A_BL = ', A_BL
+write(*,*) ''
+
+B_thermal = planck(T_eq, lambda_eff)
+Phi_thermal = pi*B_thermal
+
+write(*,*) 'T_eq = ', T_eq, ' K'
+write(*,*) 'B_thermal = ', B_thermal, ' W m^-2 sr^-1 m^-1'
+write(*,*) 'Phi_thermal = ', Phi_thermal, ' W m^-2 m^-1'
 write(*,*) ''
 
 ! observer location
@@ -253,6 +263,9 @@ do k = 1, nsteps
   ! scattering
   include 'integrate_scattered.inc'
 
+  ! thermal
+  include 'integrate_thermal.inc'
+
   ! lightcurve
   Phi_V = Delta_eff*omega*tot
   V0 = 0.d0 - 2.5d0*log10(Phi_V/Phi_V_cal)
@@ -273,6 +286,7 @@ do k = 1, nsteps
       write(str,'(i0.2)') k
       call write1("output.I_lambda." // trim(str), I_lambda)
       call write1("output.I2_lambda." // trim(str), I2_lambda)
+      call write1("output.I3_lambda." // trim(str), I3_lambda)
       call write1("output.nu_i." // trim(str), nu_i)
       call write1("output.mu_i." // trim(str), mu_i)
       call write1("output.f." // trim(str), f)
