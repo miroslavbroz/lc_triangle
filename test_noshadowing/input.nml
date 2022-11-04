@@ -1,0 +1,21 @@
+&input
+
+f_node1 = 'sphere.1.node'
+f_face1 = 'sphere.1.face'
+f_node2 = 'sphere.1.node'
+f_face2 = 'sphere.1.face'
+
+s = 0.0d0, 0.0d0, 1.0d0
+o = 0.0d0, 0.0d0, 1.0d0
+
+r_ =  2.5d0, 0.0d0, 2.5d0
+v_ = -5.0d0, 0.0d0, 0.0d0
+dt = 0.01d0
+nsteps = 100
+
+use_shadowing = .false.
+use_scattering = .false.
+debug = .false.
+
+/ ! end-of-input
+
