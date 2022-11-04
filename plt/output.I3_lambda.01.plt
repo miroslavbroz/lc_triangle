@@ -8,8 +8,8 @@ set yl "y"
 set zl "z"
 set cbl "I3_{lambda} [W m^{-2} sr^{-1} m^{-1}]" offset 3,0
 
-set cbr [0:]
-set logscale cb
+set cbr [0:1.e-23]
+#set logscale cb
 
 set view 90,0
 set view equal xyz

@@ -2,23 +2,29 @@ Flat profile:
 
 Each sample counts as 0.01 seconds.
   %   cumulative   self              self     total           
- time   seconds   seconds    calls  us/call  us/call  name    
- 71.44      0.05     0.05   906260     0.06     0.07  __triangle_module_MOD_intersect_ab_t
- 14.29      0.06     0.01  2719100     0.00     0.00  __vector_product_module_MOD_vector_product
- 14.29      0.07     0.01      200    50.01   350.05  __triangle_module_MOD_nu
-  0.00      0.07     0.00      162     0.00     0.00  __normalize_module_MOD_normalize
-  0.00      0.07     0.00      160     0.00     0.00  __surface_module_MOD_s1
-  0.00      0.07     0.00      101     0.00     0.00  __centre_module_MOD_centre
-  0.00      0.07     0.00        4     0.00     0.00  __write1_module_MOD_write1
-  0.00      0.07     0.00        2     0.00     0.00  __read_elem_module_MOD_read_elem
-  0.00      0.07     0.00        2     0.00     0.00  __read_face_module_MOD_read_face
-  0.00      0.07     0.00        2     0.00     0.00  __read_node_module_MOD_read_node
-  0.00      0.07     0.00        2     0.00     0.00  __triangle_module_MOD_mu
-  0.00      0.07     0.00        2     0.00     0.00  __write_face_module_MOD_write_face
-  0.00      0.07     0.00        2     0.00     0.00  __write_node_module_MOD_write_node
-  0.00      0.07     0.00        1     0.00     0.59  __normal_module_MOD_normal
-  0.00      0.07     0.00        1     0.00     0.00  __planck_module_MOD_planck
-  0.00      0.07     0.00        1     0.00     0.59  __surface_module_MOD_surface
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 76.44     67.60    67.60      100   675.97   675.97  __scattering_module_MOD_tau
+ 14.84     80.72    13.12      200    65.61    65.81  __shadowing_module_MOD_nu
+  8.67     88.39     7.67                             MAIN__
+  0.03     88.42     0.03      200     0.15     0.15  __boundingbox_module_MOD_boundingbox
+  0.01     88.43     0.01   583510     0.00     0.00  __intersect_ab_t_module_MOD_intersect_ab_t
+  0.01     88.44     0.01      101     0.10     0.10  __centre_module_MOD_centre
+  0.00     88.44     0.00  1761466     0.00     0.00  __vector_product_module_MOD_vector_product
+  0.00     88.44     0.00   229238     0.00     0.00  __lambert_module_MOD_f_lambert
+  0.00     88.44     0.00     5370     0.00     0.00  __normalize_module_MOD_normalize
+  0.00     88.44     0.00     5368     0.00     0.00  __surface_module_MOD_s1
+  0.00     88.44     0.00      100     0.00     0.00  __shadowing_module_MOD_non
+  0.00     88.44     0.00       18     0.00     0.00  __write1_module_MOD_write1
+  0.00     88.44     0.00        9     0.00     0.00  __write_node_module_MOD_write_node
+  0.00     88.44     0.00        3     0.00     0.00  __write_face_module_MOD_write_face
+  0.00     88.44     0.00        2     0.00     0.00  __planck_module_MOD_planck
+  0.00     88.44     0.00        2     0.00     0.00  __read_face_module_MOD_read_face
+  0.00     88.44     0.00        2     0.00     0.00  __read_node_module_MOD_read_node
+  0.00     88.44     0.00        2     0.00     0.00  __shadowing_module_MOD_mu
+  0.00     88.44     0.00        1     0.00     0.00  __hapke_module_MOD_init_hapke
+  0.00     88.44     0.00        1     0.00     0.00  __normal_module_MOD_normal
+  0.00     88.44     0.00        1     0.00     0.00  __read_input_module_MOD_read_input
+  0.00     88.44     0.00        1     0.00     0.00  __surface_module_MOD_surface
 
  %         the percentage of the total running time of the
 time       program used by this function.
@@ -56,81 +62,103 @@ notice and this notice are preserved.
 		     Call graph (explanation follows)
 
 
-granularity: each sample hit covers 2 byte(s) for 14.28% of 0.07 seconds
+granularity: each sample hit covers 2 byte(s) for 0.01% of 88.44 seconds
 
 index % time    self  children    called     name
                                                  <spontaneous>
-[1]    100.0    0.00    0.07                 MAIN__ [1]
-                0.01    0.06     200/200         __triangle_module_MOD_nu [2]
-                0.00    0.00       1/1           __normal_module_MOD_normal [6]
-                0.00    0.00       1/1           __surface_module_MOD_surface [7]
-                0.00    0.00     101/101         __centre_module_MOD_centre [16]
-                0.00    0.00       4/4           __write1_module_MOD_write1 [17]
-                0.00    0.00       2/2           __read_node_module_MOD_read_node [20]
-                0.00    0.00       2/2           __read_face_module_MOD_read_face [19]
-                0.00    0.00       2/2           __read_elem_module_MOD_read_elem [18]
-                0.00    0.00       2/162         __normalize_module_MOD_normalize [15]
-                0.00    0.00       2/2           __triangle_module_MOD_mu [21]
-                0.00    0.00       2/2           __write_node_module_MOD_write_node [23]
-                0.00    0.00       2/2           __write_face_module_MOD_write_face [22]
-                0.00    0.00       1/1           __planck_module_MOD_planck [24]
+[1]    100.0    7.67   80.77                 MAIN__ [1]
+               67.60    0.00     100/100         __scattering_module_MOD_tau [2]
+               13.12    0.04     200/200         __shadowing_module_MOD_nu [3]
+                0.01    0.00     101/101         __centre_module_MOD_centre [6]
+                0.00    0.00  229238/229238      __lambert_module_MOD_f_lambert [15]
+                0.00    0.00     100/100         __shadowing_module_MOD_non [18]
+                0.00    0.00      18/18          __write1_module_MOD_write1 [19]
+                0.00    0.00       9/9           __write_node_module_MOD_write_node [20]
+                0.00    0.00       3/3           __write_face_module_MOD_write_face [21]
+                0.00    0.00       2/2           __read_node_module_MOD_read_node [24]
+                0.00    0.00       2/2           __read_face_module_MOD_read_face [23]
+                0.00    0.00       2/2           __shadowing_module_MOD_mu [25]
+                0.00    0.00       2/2           __planck_module_MOD_planck [22]
+                0.00    0.00       1/1           __read_input_module_MOD_read_input [28]
+                0.00    0.00       1/1           __normal_module_MOD_normal [27]
+                0.00    0.00       1/1           __surface_module_MOD_surface [29]
+                0.00    0.00       1/1           __hapke_module_MOD_init_hapke [26]
 -----------------------------------------------
-                0.01    0.06     200/200         MAIN__ [1]
-[2]    100.0    0.01    0.06     200         __triangle_module_MOD_nu [2]
-                0.05    0.01  906260/906260      __triangle_module_MOD_intersect_ab_t [3]
+               67.60    0.00     100/100         MAIN__ [1]
+[2]     76.4   67.60    0.00     100         __scattering_module_MOD_tau [2]
 -----------------------------------------------
-                0.05    0.01  906260/906260      __triangle_module_MOD_nu [2]
-[3]     85.7    0.05    0.01  906260         __triangle_module_MOD_intersect_ab_t [3]
-                0.01    0.00 2718780/2719100     __vector_product_module_MOD_vector_product [4]
+               13.12    0.04     200/200         MAIN__ [1]
+[3]     14.9   13.12    0.04     200         __shadowing_module_MOD_nu [3]
+                0.03    0.00     200/200         __boundingbox_module_MOD_boundingbox [4]
+                0.01    0.00  583510/583510      __intersect_ab_t_module_MOD_intersect_ab_t [5]
 -----------------------------------------------
-                0.00    0.00     160/2719100     __normal_module_MOD_normal [6]
-                0.00    0.00     160/2719100     __surface_module_MOD_s1 [5]
-                0.01    0.00 2718780/2719100     __triangle_module_MOD_intersect_ab_t [3]
-[4]     14.3    0.01    0.00 2719100         __vector_product_module_MOD_vector_product [4]
+                0.03    0.00     200/200         __shadowing_module_MOD_nu [3]
+[4]      0.0    0.03    0.00     200         __boundingbox_module_MOD_boundingbox [4]
+                0.00    0.00     200/1761466     __vector_product_module_MOD_vector_product [14]
 -----------------------------------------------
-                0.00    0.00     160/160         __surface_module_MOD_surface [7]
-[5]      0.0    0.00    0.00     160         __surface_module_MOD_s1 [5]
-                0.00    0.00     160/2719100     __vector_product_module_MOD_vector_product [4]
+                0.01    0.00  583510/583510      __shadowing_module_MOD_nu [3]
+[5]      0.0    0.01    0.00  583510         __intersect_ab_t_module_MOD_intersect_ab_t [5]
+                0.00    0.00 1750530/1761466     __vector_product_module_MOD_vector_product [14]
+-----------------------------------------------
+                0.01    0.00     101/101         MAIN__ [1]
+[6]      0.0    0.01    0.00     101         __centre_module_MOD_centre [6]
+-----------------------------------------------
+                0.00    0.00     200/1761466     __boundingbox_module_MOD_boundingbox [4]
+                0.00    0.00    5368/1761466     __normal_module_MOD_normal [27]
+                0.00    0.00    5368/1761466     __surface_module_MOD_s1 [17]
+                0.00    0.00 1750530/1761466     __intersect_ab_t_module_MOD_intersect_ab_t [5]
+[14]     0.0    0.00    0.00 1761466         __vector_product_module_MOD_vector_product [14]
+-----------------------------------------------
+                0.00    0.00  229238/229238      MAIN__ [1]
+[15]     0.0    0.00    0.00  229238         __lambert_module_MOD_f_lambert [15]
+-----------------------------------------------
+                0.00    0.00       2/5370        __read_input_module_MOD_read_input [28]
+                0.00    0.00    5368/5370        __normal_module_MOD_normal [27]
+[16]     0.0    0.00    0.00    5370         __normalize_module_MOD_normalize [16]
+-----------------------------------------------
+                0.00    0.00    5368/5368        __surface_module_MOD_surface [29]
+[17]     0.0    0.00    0.00    5368         __surface_module_MOD_s1 [17]
+                0.00    0.00    5368/1761466     __vector_product_module_MOD_vector_product [14]
+-----------------------------------------------
+                0.00    0.00     100/100         MAIN__ [1]
+[18]     0.0    0.00    0.00     100         __shadowing_module_MOD_non [18]
+-----------------------------------------------
+                0.00    0.00      18/18          MAIN__ [1]
+[19]     0.0    0.00    0.00      18         __write1_module_MOD_write1 [19]
+-----------------------------------------------
+                0.00    0.00       9/9           MAIN__ [1]
+[20]     0.0    0.00    0.00       9         __write_node_module_MOD_write_node [20]
+-----------------------------------------------
+                0.00    0.00       3/3           MAIN__ [1]
+[21]     0.0    0.00    0.00       3         __write_face_module_MOD_write_face [21]
+-----------------------------------------------
+                0.00    0.00       2/2           MAIN__ [1]
+[22]     0.0    0.00    0.00       2         __planck_module_MOD_planck [22]
+-----------------------------------------------
+                0.00    0.00       2/2           MAIN__ [1]
+[23]     0.0    0.00    0.00       2         __read_face_module_MOD_read_face [23]
+-----------------------------------------------
+                0.00    0.00       2/2           MAIN__ [1]
+[24]     0.0    0.00    0.00       2         __read_node_module_MOD_read_node [24]
+-----------------------------------------------
+                0.00    0.00       2/2           MAIN__ [1]
+[25]     0.0    0.00    0.00       2         __shadowing_module_MOD_mu [25]
 -----------------------------------------------
                 0.00    0.00       1/1           MAIN__ [1]
-[6]      0.0    0.00    0.00       1         __normal_module_MOD_normal [6]
-                0.00    0.00     160/2719100     __vector_product_module_MOD_vector_product [4]
-                0.00    0.00     160/162         __normalize_module_MOD_normalize [15]
+[26]     0.0    0.00    0.00       1         __hapke_module_MOD_init_hapke [26]
 -----------------------------------------------
                 0.00    0.00       1/1           MAIN__ [1]
-[7]      0.0    0.00    0.00       1         __surface_module_MOD_surface [7]
-                0.00    0.00     160/160         __surface_module_MOD_s1 [5]
------------------------------------------------
-                0.00    0.00       2/162         MAIN__ [1]
-                0.00    0.00     160/162         __normal_module_MOD_normal [6]
-[15]     0.0    0.00    0.00     162         __normalize_module_MOD_normalize [15]
------------------------------------------------
-                0.00    0.00     101/101         MAIN__ [1]
-[16]     0.0    0.00    0.00     101         __centre_module_MOD_centre [16]
------------------------------------------------
-                0.00    0.00       4/4           MAIN__ [1]
-[17]     0.0    0.00    0.00       4         __write1_module_MOD_write1 [17]
------------------------------------------------
-                0.00    0.00       2/2           MAIN__ [1]
-[18]     0.0    0.00    0.00       2         __read_elem_module_MOD_read_elem [18]
------------------------------------------------
-                0.00    0.00       2/2           MAIN__ [1]
-[19]     0.0    0.00    0.00       2         __read_face_module_MOD_read_face [19]
------------------------------------------------
-                0.00    0.00       2/2           MAIN__ [1]
-[20]     0.0    0.00    0.00       2         __read_node_module_MOD_read_node [20]
------------------------------------------------
-                0.00    0.00       2/2           MAIN__ [1]
-[21]     0.0    0.00    0.00       2         __triangle_module_MOD_mu [21]
------------------------------------------------
-                0.00    0.00       2/2           MAIN__ [1]
-[22]     0.0    0.00    0.00       2         __write_face_module_MOD_write_face [22]
------------------------------------------------
-                0.00    0.00       2/2           MAIN__ [1]
-[23]     0.0    0.00    0.00       2         __write_node_module_MOD_write_node [23]
+[27]     0.0    0.00    0.00       1         __normal_module_MOD_normal [27]
+                0.00    0.00    5368/1761466     __vector_product_module_MOD_vector_product [14]
+                0.00    0.00    5368/5370        __normalize_module_MOD_normalize [16]
 -----------------------------------------------
                 0.00    0.00       1/1           MAIN__ [1]
-[24]     0.0    0.00    0.00       1         __planck_module_MOD_planck [24]
+[28]     0.0    0.00    0.00       1         __read_input_module_MOD_read_input [28]
+                0.00    0.00       2/5370        __normalize_module_MOD_normalize [16]
+-----------------------------------------------
+                0.00    0.00       1/1           MAIN__ [1]
+[29]     0.0    0.00    0.00       1         __surface_module_MOD_surface [29]
+                0.00    0.00    5368/5368        __surface_module_MOD_s1 [17]
 -----------------------------------------------
 
  This table describes the call tree of the program, and was sorted by
@@ -223,9 +251,11 @@ notice and this notice are preserved.
 
 Index by function name
 
-  [16] __centre_module_MOD_centre [20] __read_node_module_MOD_read_node [4] __vector_product_module_MOD_vector_product
-   [6] __normal_module_MOD_normal [5] __surface_module_MOD_s1 [17] __write1_module_MOD_write1
-  [15] __normalize_module_MOD_normalize [7] __surface_module_MOD_surface [22] __write_face_module_MOD_write_face
-  [24] __planck_module_MOD_planck [3] __triangle_module_MOD_intersect_ab_t [23] __write_node_module_MOD_write_node
-  [18] __read_elem_module_MOD_read_elem [21] __triangle_module_MOD_mu
-  [19] __read_face_module_MOD_read_face [2] __triangle_module_MOD_nu
+   [1] MAIN__                 [22] __planck_module_MOD_planck [17] __surface_module_MOD_s1
+   [4] __boundingbox_module_MOD_boundingbox [23] __read_face_module_MOD_read_face [29] __surface_module_MOD_surface
+   [6] __centre_module_MOD_centre [28] __read_input_module_MOD_read_input [14] __vector_product_module_MOD_vector_product
+  [26] __hapke_module_MOD_init_hapke [24] __read_node_module_MOD_read_node [19] __write1_module_MOD_write1
+   [5] __intersect_ab_t_module_MOD_intersect_ab_t [2] __scattering_module_MOD_tau [21] __write_face_module_MOD_write_face
+  [15] __lambert_module_MOD_f_lambert [25] __shadowing_module_MOD_mu [20] __write_node_module_MOD_write_node
+  [27] __normal_module_MOD_normal [18] __shadowing_module_MOD_non
+  [16] __normalize_module_MOD_normalize [3] __shadowing_module_MOD_nu
