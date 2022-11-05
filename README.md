@@ -26,5 +26,6 @@ The following physics was already implemented:
 - 2D mesh projection
 - 2D vector product
 - synthetic image (AO)
+- integration with Vispy?
 - integration with Xitau?
 
