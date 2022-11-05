@@ -74,13 +74,11 @@ use hapke_module
 implicit none
 
 integer, dimension(:,:), pointer :: faces, faces1, faces2
-integer, dimension(:,:), pointer :: elems, elems1, elems2
 double precision, dimension(:,:), pointer :: nodes, nodes1, nodes2
 double precision, dimension(:,:), pointer :: normals, centres
-double precision, dimension(:), pointer :: surf, vols
+double precision, dimension(:), pointer :: surf
 double precision, dimension(:), pointer :: mu_i, mu_e, nu_i, nu_e, f, Phi_i
 double precision, dimension(:), pointer :: I_lambda, I2_lambda, I3_lambda
-double precision, dimension(:,:), pointer :: nutmp_i, nutmp_e
 double precision, dimension(:,:), pointer :: tau_i
 
 integer :: i, j, k, n, m
