@@ -3,7 +3,7 @@ f90 = gfortran
 
 opt = -O3 -Jsrc
 opt = -O3 -Jsrc -pg
-opt = -O3 -Jsrc -fopenmp -flto -Ofast
+opt = -O3 -Jsrc -fopenmp -flto -Ofast -ffast-math
 
 obj = \
   src/const.o \
